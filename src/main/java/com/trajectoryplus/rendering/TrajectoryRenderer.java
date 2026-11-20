@@ -1,6 +1,7 @@
 package com.trajectoryplus.rendering;
 
 import com.trajectoryplus.config.TrajectoryConfig;
+import com.trajectoryplus.prediction.ProjectileProfile;
 import com.trajectoryplus.prediction.TrajectoryPredictor;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.render.RenderLayer;
@@ -26,7 +27,9 @@ public final class TrajectoryRenderer {
         // the world-render transforms; do not apply the camera translation twice.
         int rgb = parseColor(config.lineColor);
         int alpha = (int) Math.round(config.lineOpacity * 255);
-        if (config.showTrajectory) {
+        // Bow preview stays visible as an impact marker, without obstructing the view with a trajectory line.
+        boolean suppressTrajectoryLine = result.kind() == ProjectileProfile.Kind.BOW;
+        if (config.showTrajectory && !suppressTrajectoryLine) {
             List<Vec3d> points = result.path();
             for (int i = 1; i < points.size(); i++) {
                 Vec3d a = points.get(i - 1);

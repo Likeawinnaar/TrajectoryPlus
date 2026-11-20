@@ -12,10 +12,10 @@ import java.util.List;
 /** Never spawns an entity or loads chunks. One simulation iteration is one game tick. */
 public final class TrajectoryPredictor {
     public enum StopReason { IMPACT, TIME_LIMIT, DISTANCE_LIMIT, UNLOADED_CHUNK, NONE }
-    public record Result(List<Vec3d> path, Vec3d impact, StopReason reason) {
+    public record Result(List<Vec3d> path, Vec3d impact, StopReason reason, ProjectileProfile.Kind kind) {
         public boolean hasImpact() { return reason == StopReason.IMPACT && impact != null; }
     }
-    private static final Result EMPTY = new Result(List.of(), null, StopReason.NONE);
+    private static final Result EMPTY = new Result(List.of(), null, StopReason.NONE, null);
     private final CollisionResolver collision = new CollisionResolver();
     private final ProjectileResolver resolver = new ProjectileResolver();
     private Result cached = EMPTY;
@@ -47,17 +47,17 @@ public final class TrajectoryPredictor {
             Vec3d next = pos.add(velocity);
             BlockPos nextBlock = BlockPos.ofFloored(next);
             if (!world.isChunkLoaded(nextBlock.getX() >> 4, nextBlock.getZ() >> 4))
-                return new Result(List.copyOf(points), null, StopReason.UNLOADED_CHUNK);
+                return new Result(List.copyOf(points), null, StopReason.UNLOADED_CHUNK, launch.profile().kind());
             Vec3d hit = collision.impact(world, player, pos, next);
             if (hit != null) {
                 points.add(hit);
-                return new Result(List.copyOf(points), hit, StopReason.IMPACT);
+                return new Result(List.copyOf(points), hit, StopReason.IMPACT, launch.profile().kind());
             }
             double length = next.distanceTo(pos);
             if (traversed + length >= settings.maxDistance) {
                 Vec3d end = pos.add(velocity.multiply(PhysicsMath.remainingFraction(settings.maxDistance - traversed, length)));
                 points.add(end);
-                return new Result(List.copyOf(points), null, StopReason.DISTANCE_LIMIT);
+                return new Result(List.copyOf(points), null, StopReason.DISTANCE_LIMIT, launch.profile().kind());
             }
             points.add(next);
             traversed += length;
@@ -70,6 +70,6 @@ public final class TrajectoryPredictor {
                     PhysicsMath.verticalVelocity(velocity.y, drag, launch.profile().gravity()),
                     PhysicsMath.dragComponent(velocity.z, drag));
         }
-        return new Result(List.copyOf(points), null, StopReason.TIME_LIMIT);
+        return new Result(List.copyOf(points), null, StopReason.TIME_LIMIT, launch.profile().kind());
     }
 }

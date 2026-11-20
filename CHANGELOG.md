@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Bow prediction is **impact-marker only**: the predicted location remains visible, but the trajectory line no longer obstructs aiming.
+- Added a ready-to-edit Modrinth project description.
+
 ## 1.0.0 — development candidate (2026-11-20)
 
 - Added client-side mod entrypoint and P toggle.

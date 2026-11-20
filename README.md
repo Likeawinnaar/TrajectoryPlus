@@ -7,6 +7,7 @@ A **Minecraft Java Edition 1.21.1 / Fabric** client-only mod project that previe
 - Separate launch profiles for ender pearls, bows, loaded crossbows with arrows, snowballs, eggs, tridents, splash and lingering potions, and experience bottles.
 - Simulation at 20 ticks per second, using per-projectile initial speed, drag and gravity, water drag approximation, inherited player motion and actual voxel-shape block raycasts.
 - Curved, connected world-space trajectory (solid, dashed or dotted) and cross, square or circular impact marker.
+- **Bow aiming shows only the predicted impact marker** (no trajectory line obstructing the view).
 - Adjustable visibility, line/marker colors in `#RRGGBB` format, opacity, approximate line thickness, marker size, per-projectile toggles and distance/tick budgets.
 - Native Minecraft-style configuration accessible from **Mod Menu → Trajectory+ → Configure**, using only vanilla widgets.
 - **Done** applies and saves; **Cancel/Escape** discards changes; **Reset to Defaults** resets staged values.
