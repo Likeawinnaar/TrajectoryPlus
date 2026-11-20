@@ -10,6 +10,7 @@ A **Minecraft Java Edition 1.21.1 / Fabric** client-only mod project that previe
 - **Bow aiming shows only the predicted impact marker** (no trajectory line obstructing the view).
 - Adjustable visibility, line/marker colors in `#RRGGBB` format, opacity, approximate line thickness, marker size, per-projectile toggles and distance/tick budgets.
 - Native Minecraft-style configuration accessible from **Mod Menu → Trajectory+ → Configure**, using only vanilla widgets.
+- Includes the user-provided bow-and-crosshair icon in Fabric's mod list.
 - **Done** applies and saves; **Cancel/Escape** discards changes; **Reset to Defaults** resets staged values.
 - Default **P** key toggles the entire preview. Change it via the **Change Toggle Key** button, which opens Minecraft's controls screen.
 - English and Dutch language keys, local JSON config at `config/trajectoryplus.json` (a sample is included).

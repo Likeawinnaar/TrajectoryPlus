@@ -7,8 +7,12 @@
   "environment": "client",
   "license": "MIT",
   "entrypoints": {
-    "client": ["com.trajectoryplus.TrajectoryPlusClient"],
-    "modmenu": ["com.trajectoryplus.integration.TrajectoryModMenu"]
+    "client": [
+      "com.trajectoryplus.TrajectoryPlusClient"
+    ],
+    "modmenu": [
+      "com.trajectoryplus.integration.TrajectoryModMenu"
+    ]
   },
   "depends": {
     "fabricloader": ">=0.16.0",
@@ -16,5 +20,6 @@
     "java": ">=21",
     "fabric-api": "*",
     "modmenu": ">=11.0.0"
-  }
+  },
+  "icon": "assets/trajectoryplus/icon.png"
 }

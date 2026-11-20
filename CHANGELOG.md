@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added the user-provided bow-and-crosshair artwork as Trajectory+'s in-game mod icon (128×128 transparent PNG).
 - Bow prediction is **impact-marker only**: the predicted location remains visible, but the trajectory line no longer obstructs aiming.
 - Added a ready-to-edit Modrinth project description.
 
