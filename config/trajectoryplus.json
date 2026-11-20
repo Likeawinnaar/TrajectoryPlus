@@ -1,0 +1,27 @@
+{
+  "configVersion": 1,
+  "enabled": true,
+  "showTrajectory": true,
+  "showImpactMarker": true,
+  "lineStyle": "SOLID",
+  "lineColor": "#00D9FF",
+  "lineOpacity": 0.85,
+  "lineThickness": 2,
+  "impactMarkerStyle": "CROSS",
+  "impactMarkerColor": "#00D9FF",
+  "impactMarkerOpacity": 0.85,
+  "impactMarkerSize": 4,
+  "maxDistance": 256,
+  "maxTicks": 200,
+  "projectiles": {
+    "enderPearl": true,
+    "bow": true,
+    "crossbow": true,
+    "snowball": true,
+    "egg": true,
+    "trident": true,
+    "splashPotion": true,
+    "lingeringPotion": true,
+    "experienceBottle": true
+  }
+}

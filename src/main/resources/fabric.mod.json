@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "trajectoryplus",
+  "version": "${version}",
+  "name": "Trajectory+",
+  "description": "Client-side 3D trajectory previews for Minecraft projectiles.",
+  "environment": "client",
+  "license": "MIT",
+  "entrypoints": {
+    "client": ["com.trajectoryplus.TrajectoryPlusClient"],
+    "modmenu": ["com.trajectoryplus.integration.TrajectoryModMenu"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "1.21.1",
+    "java": ">=21",
+    "fabric-api": "*",
+    "modmenu": ">=11.0.0"
+  }
+}
