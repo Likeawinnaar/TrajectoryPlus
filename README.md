@@ -2,6 +2,30 @@
 
 A **Minecraft Java Edition 1.21.1 / Fabric** client-only mod project that previews curved projectile paths in 3D and marks predicted block impacts. Version `1.0.0` (development candidate; **not a verified release**).
 
+## Screenshots
+
+Captured in Minecraft Java Edition 1.21.1 with Fabric and Trajectory+ 1.0.0.
+
+### Projectile previews
+
+| Ender pearl trajectory | Splash potion trajectory |
+| --- | --- |
+| ![Cyan ender pearl trajectory and cross impact marker](docs/screenshots/01-ender-pearl.png) | ![Cyan splash potion trajectory](docs/screenshots/08-splash-potion.png) |
+
+| Dashed line and square marker | Dotted line and circular marker |
+| --- | --- |
+| ![Dashed cyan trajectory with a yellow square at the target block](docs/screenshots/02-dashed-square.png) | ![Dotted cyan trajectory with a yellow circle at the target block](docs/screenshots/03-dotted-circle.png) |
+
+### Settings
+
+| General | Projectiles |
+| --- | --- |
+| ![General settings for overlay visibility and the trajectory line](docs/screenshots/04-general.png) | ![Individual toggles for the nine supported projectile types](docs/screenshots/05-projectiles.png) |
+
+| Appearance | Advanced |
+| --- | --- |
+| ![Appearance settings for line and marker styles, colors, and opacity](docs/screenshots/06-visuals.png) | ![Advanced settings for simulation limits and the toggle key](docs/screenshots/07-advanced.png) |
+
 ## Features represented in the source
 
 - Separate launch profiles for ender pearls, bows, loaded crossbows with arrows, snowballs, eggs, tridents, splash and lingering potions, and experience bottles.
@@ -62,10 +86,12 @@ For a standard Gradle Wrapper (after a successful Gradle setup), run `./gradlew.
 - Dashes/dots are split inside each simulated tick segment; spacing may not be perfectly uniform across boundaries.
 - Thickness is approximated by multiple camera-relative line segments. It is not a true independent pixel-width render layer.
 - Circle and square markers are drawn in a horizontal plane; on vertical surfaces they are less legible than the cross.
-- No advanced profiler has been run and no in-game FPS measurements or gameplay tests have been executed.
+- In-game FPS and performance have yet to be measured.
 - Multiplayer servers may restrict visual prediction mods. Respect server rules.
 
 ## Testing
+
+The supplied 1.0.0 JAR was functionally tested in a local creative world on Minecraft 1.21.1 with Fabric. The checks covered previews for all nine projectile types, the four settings pages, and saving, cancelling, resetting, and changing the toggle key. Exact projectile parity and multiplayer compatibility remain unverified.
 
 For a quick zero-dependency numerical helper test on Linux/macOS:
 
