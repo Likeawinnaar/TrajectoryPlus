@@ -50,9 +50,13 @@ jobs:
           fi
       - name: Install Mesa EGL for Minecraft 26.3
         if: matrix.minecraft == '26.3'
+        timeout-minutes: 3
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libegl1 libegl-mesa0 libgl1-mesa-dri libvulkan1 mesa-vulkan-drivers
+          apt_options=(-o Acquire::Retries=1 -o Acquire::http::Timeout=15 -o Acquire::https::Timeout=15)
+          if ! sudo apt-get "${apt_options[@]}" install -y --no-install-recommends libegl1 libegl-mesa0; then
+            sudo apt-get "${apt_options[@]}" update
+            sudo apt-get "${apt_options[@]}" install -y --no-install-recommends libegl1 libegl-mesa0
+          fi
       - name: Start Minecraft with the runtime JAR
         run: python3 porting/smoke_client.py "$MC_VERSION"
       - name: Upload runtime JAR
