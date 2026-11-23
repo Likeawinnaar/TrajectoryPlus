@@ -1,23 +1,24 @@
 {
-  "description": "Requested Minecraft versions for individually ported and CI-verified Trajectory+ Fabric JARs. This file is a planning manifest, NOT a compatibility declaration.",
+  "description": "Build targets and CI verification status for the separate Trajectory+ Fabric runtime JARs.",
   "reference_issue": "https://github.com/Likeawinnaar/TrajectoryPlus/issues/1",
   "mod_version": "1.1.0-beta",
   "baseline": {
     "minecraft": "1.21.1",
-    "status": "existing-ci-build-succeeded",
+    "status": "ci-verified",
     "java": 21,
     "gradle": "8.14.3",
     "loom": "1.11.8",
     "loader": "0.16.14",
     "fabric_api": "0.116.7+1.21.1",
     "mod_menu": "11.0.4",
-    "yarn": "1.21.1+build.3"
+    "yarn": "1.21.1+build.3",
+    "runtime_jar_verified": true
   },
   "versions": [
     {
       "minecraft": "1.21.2",
-      "status": "not-ported",
-      "runtime_jar_verified": false,
+      "status": "ci-verified",
+      "runtime_jar_verified": true,
       "java": 21,
       "gradle": "8.14.3",
       "loom": "1.11.8",
@@ -28,8 +29,8 @@
     },
     {
       "minecraft": "1.21.3",
-      "status": "not-ported",
-      "runtime_jar_verified": false,
+      "status": "ci-verified",
+      "runtime_jar_verified": true,
       "java": 21,
       "gradle": "8.14.3",
       "loom": "1.11.8",
@@ -40,8 +41,8 @@
     },
     {
       "minecraft": "1.21.4",
-      "status": "not-ported",
-      "runtime_jar_verified": false,
+      "status": "ci-verified",
+      "runtime_jar_verified": true,
       "java": 21,
       "gradle": "8.14.3",
       "loom": "1.11.8",
@@ -52,8 +53,8 @@
     },
     {
       "minecraft": "1.21.5",
-      "status": "not-ported",
-      "runtime_jar_verified": false,
+      "status": "ci-verified",
+      "runtime_jar_verified": true,
       "java": 21,
       "gradle": "8.14.3",
       "loom": "1.11.8",
@@ -64,8 +65,8 @@
     },
     {
       "minecraft": "1.21.6",
-      "status": "not-ported",
-      "runtime_jar_verified": false,
+      "status": "ci-verified",
+      "runtime_jar_verified": true,
       "java": 21,
       "gradle": "8.14.3",
       "loom": "1.11.8",
@@ -76,8 +77,8 @@
     },
     {
       "minecraft": "1.21.7",
-      "status": "not-ported",
-      "runtime_jar_verified": false,
+      "status": "ci-verified",
+      "runtime_jar_verified": true,
       "java": 21,
       "gradle": "8.14.3",
       "loom": "1.11.8",
@@ -88,8 +89,8 @@
     },
     {
       "minecraft": "1.21.8",
-      "status": "not-ported",
-      "runtime_jar_verified": false,
+      "status": "ci-verified",
+      "runtime_jar_verified": true,
       "java": 21,
       "gradle": "8.14.3",
       "loom": "1.11.8",
@@ -100,8 +101,8 @@
     },
     {
       "minecraft": "1.21.9",
-      "status": "not-ported",
-      "runtime_jar_verified": false,
+      "status": "ci-verified",
+      "runtime_jar_verified": true,
       "java": 21,
       "gradle": "8.14.3",
       "loom": "1.11.8",
@@ -112,8 +113,8 @@
     },
     {
       "minecraft": "1.21.10",
-      "status": "not-ported",
-      "runtime_jar_verified": false,
+      "status": "ci-verified",
+      "runtime_jar_verified": true,
       "java": 21,
       "gradle": "8.14.3",
       "loom": "1.11.8",
@@ -124,8 +125,8 @@
     },
     {
       "minecraft": "1.21.11",
-      "status": "not-ported",
-      "runtime_jar_verified": false,
+      "status": "ci-verified",
+      "runtime_jar_verified": true,
       "java": 21,
       "gradle": "9.4.1",
       "loom": "1.16.3",
@@ -136,8 +137,8 @@
     },
     {
       "minecraft": "26.1",
-      "status": "not-ported",
-      "runtime_jar_verified": false,
+      "status": "ci-verified",
+      "runtime_jar_verified": true,
       "java": 25,
       "gradle": "9.8.2",
       "loom": "1.19.4",
@@ -147,8 +148,8 @@
     },
     {
       "minecraft": "26.1.1",
-      "status": "not-ported",
-      "runtime_jar_verified": false,
+      "status": "ci-verified",
+      "runtime_jar_verified": true,
       "java": 25,
       "gradle": "9.8.2",
       "loom": "1.19.4",
@@ -158,8 +159,8 @@
     },
     {
       "minecraft": "26.1.2",
-      "status": "not-ported",
-      "runtime_jar_verified": false,
+      "status": "ci-verified",
+      "runtime_jar_verified": true,
       "java": 25,
       "gradle": "9.8.2",
       "loom": "1.19.4",
@@ -169,8 +170,8 @@
     },
     {
       "minecraft": "26.2",
-      "status": "not-ported",
-      "runtime_jar_verified": false,
+      "status": "ci-verified",
+      "runtime_jar_verified": true,
       "java": 25,
       "gradle": "9.8.2",
       "loom": "1.19.4",
@@ -180,8 +181,8 @@
     },
     {
       "minecraft": "26.3",
-      "status": "not-ported",
-      "runtime_jar_verified": false,
+      "status": "ci-verified",
+      "runtime_jar_verified": true,
       "java": 25,
       "gradle": "9.8.2",
       "loom": "1.19.4",
@@ -196,5 +197,6 @@
     "Verify and pin real artifact versions before building.",
     "Use Java 25 and appropriate Loom/mappings for Minecraft 26.1+.",
     "Preserve client-only architecture, ender pearl predictions, bow impact-only marker, Mod Menu and mod icon."
-  ]
+  ],
+  "verification_run": "https://github.com/Likeawinnaar/TrajectoryPlus/actions/runs/45147458326"
 }

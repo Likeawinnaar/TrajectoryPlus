@@ -23,18 +23,18 @@ Port Trajectory+ to **all 15** target Minecraft releases listed in `porting/targ
 - Documentation on each target's Java version, Fabric Loader, Fabric API, Mod Menu and tested support.
 
 ## Porting checklist
-- [ ] Minecraft 1.21.2: port, compile, verify JAR metadata, upload artifact
-- [ ] Minecraft 1.21.3: port, compile, verify JAR metadata, upload artifact
-- [ ] Minecraft 1.21.4: port, compile, verify JAR metadata, upload artifact
-- [ ] Minecraft 1.21.5: port, compile, verify JAR metadata, upload artifact
-- [ ] Minecraft 1.21.6: port, compile, verify JAR metadata, upload artifact
-- [ ] Minecraft 1.21.7: port, compile, verify JAR metadata, upload artifact
-- [ ] Minecraft 1.21.8: port, compile, verify JAR metadata, upload artifact
-- [ ] Minecraft 1.21.9: port, compile, verify JAR metadata, upload artifact
-- [ ] Minecraft 1.21.10: port, compile, verify JAR metadata, upload artifact
-- [ ] Minecraft 1.21.11: port, compile, verify JAR metadata, upload artifact
-- [ ] Minecraft 26.1: port, compile, verify JAR metadata, upload artifact
-- [ ] Minecraft 26.1.1: port, compile, verify JAR metadata, upload artifact
-- [ ] Minecraft 26.1.2: port, compile, verify JAR metadata, upload artifact
-- [ ] Minecraft 26.2: port, compile, verify JAR metadata, upload artifact
-- [ ] Minecraft 26.3: port, compile, verify JAR metadata, upload artifact
+- [x] Minecraft 1.21.2: port, compile, verify JAR metadata, upload artifact
+- [x] Minecraft 1.21.3: port, compile, verify JAR metadata, upload artifact
+- [x] Minecraft 1.21.4: port, compile, verify JAR metadata, upload artifact
+- [x] Minecraft 1.21.5: port, compile, verify JAR metadata, upload artifact
+- [x] Minecraft 1.21.6: port, compile, verify JAR metadata, upload artifact
+- [x] Minecraft 1.21.7: port, compile, verify JAR metadata, upload artifact
+- [x] Minecraft 1.21.8: port, compile, verify JAR metadata, upload artifact
+- [x] Minecraft 1.21.9: port, compile, verify JAR metadata, upload artifact
+- [x] Minecraft 1.21.10: port, compile, verify JAR metadata, upload artifact
+- [x] Minecraft 1.21.11: port, compile, verify JAR metadata, upload artifact
+- [x] Minecraft 26.1: port, compile, verify JAR metadata, upload artifact
+- [x] Minecraft 26.1.1: port, compile, verify JAR metadata, upload artifact
+- [x] Minecraft 26.1.2: port, compile, verify JAR metadata, upload artifact
+- [x] Minecraft 26.2: port, compile, verify JAR metadata, upload artifact
+- [x] Minecraft 26.3: port, compile, verify JAR metadata, upload artifact
