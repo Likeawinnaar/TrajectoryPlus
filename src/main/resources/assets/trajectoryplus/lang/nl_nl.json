@@ -11,6 +11,7 @@
   "trajectoryplus.keybinds": "Aan/uit-toets wijzigen",
   "trajectoryplus.error.hex": "Gebruik een geldige #RRGGBB-kleur",
   "category.trajectoryplus": "Trajectory+",
+  "key.category.trajectoryplus.controls": "Trajectory+",
   "key.trajectoryplus.toggle": "Trajectory+ aan/uit",
   "trajectoryplus.setting.enabled": "Trajectory+ inschakelen",
   "trajectoryplus.setting.showTrajectory": "Traject tonen",

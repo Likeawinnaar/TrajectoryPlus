@@ -43,16 +43,21 @@ Options represented in the code include:
 
 ### Client-side
 
-- Designed for Minecraft Java Edition **1.21.1 Fabric**
+- Built for Minecraft Java Edition with Fabric
 - Does not require a server-side installation
 - Does not change projectile physics or automatically aim/shoot
 - Does not add blocks, items, accounts, or online services
 
-## Dependencies
+## Installation
 
-- Fabric Loader compatible with Minecraft 1.21.1
-- Fabric API
-- Mod Menu (for configuration)
+1. Select the Trajectory+ JAR for the exact Minecraft release in your Fabric instance. Use the
+   [GitHub Actions builds](https://github.com/Likeawinnaar/TrajectoryPlus/actions/workflows/build-jar.yml)
+   to download a successful build for that version.
+2. Install Fabric Loader, Fabric API, and Mod Menu for the same Minecraft release. The
+   [build manifest](porting/targets.json) lists the dependency versions used by CI.
+3. Put the Trajectory+ JAR, Fabric API, and Mod Menu in the instance's `mods` directory.
+   Use Java 21 for Minecraft 1.21.x and Java 25 for 26.x.
+4. Open **Mods → Trajectory+ → Configure** to change settings. The default toggle is **P**.
 
 ## Limitations
 

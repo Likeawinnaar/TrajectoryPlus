@@ -1,11 +1,25 @@
-plugins {
-    id 'fabric-loom' version '1.9-SNAPSHOT'
-    id 'maven-publish'
+import net.fabricmc.loom.task.prod.ClientProductionRunTask
+
+buildscript {
+    repositories {
+        maven {
+            url = 'https://maven.fabricmc.net/'
+            content { includeGroupByRegex 'net[.]fabricmc([.].*)?' }
+        }
+        mavenCentral()
+    }
+    dependencies {
+        classpath "net.fabricmc:fabric-loom:${gradle.target.loom}"
+    }
 }
 
-version = project.mod_version
-group = project.maven_group
-base { archivesName = project.archives_base_name }
+def target = gradle.target
+def remapped = target.yarn != null
+apply plugin: remapped ? 'fabric-loom' : 'net.fabricmc.fabric-loom'
+
+version = gradle.targetModVersion
+group = 'com.trajectoryplus'
+base { archivesName = 'trajectoryplus' }
 
 repositories {
     maven { url = 'https://maven.terraformersmc.com/releases/' }
@@ -13,31 +27,91 @@ repositories {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+    minecraft "com.mojang:minecraft:${target.minecraft}"
+    if (remapped) {
+        mappings "net.fabricmc:yarn:${target.yarn}:v2"
+    }
+    def mod = remapped ? 'modImplementation' : 'implementation'
+    add(mod, "net.fabricmc:fabric-loader:${target.loader}")
+    add(mod, "net.fabricmc.fabric-api:fabric-api:${target.fabric_api}")
+    add(mod, "com.terraformersmc:modmenu:${target.mod_menu}")
+}
+
+def numericVersion = target.minecraft.tokenize('.').last().toInteger()
+sourceSets.main.java.srcDir(remapped ? 'src/yarn/java' : 'src/mojang/java')
+if (remapped) {
+    sourceSets.main.java.srcDir(numericVersion <= 5 ? 'src/yarnGuiLegacy/java' : 'src/yarnGui/java')
+    sourceSets.main.java.srcDir(numericVersion <= 8 ? 'src/yarnLegacy/java' :
+        "src/yarn12${numericVersion}/java")
+    if (numericVersion == 9) {
+        sourceSets.main.resources.srcDir('src/yarn129/resources')
+    }
+} else {
+    sourceSets.main.java.srcDir(target.minecraft.startsWith('26.1') ? 'src/mojang261/java' : 'src/mojangRenderThread/java')
 }
 
 processResources {
-    inputs.property 'version', project.version
-    filesMatching('fabric.mod.json') { expand 'version': project.version }
+    def metadata = [version: project.version, minecraft: target.minecraft, java: target.java,
+                    loader: target.minecraft == '1.21.1' ? '0.16.0' : target.loader,
+                    modmenu: target.minecraft == '1.21.1' ? '11.0.0' : target.mod_menu,
+                    worldRenderMixin: target.minecraft == '1.21.9']
+    inputs.properties(metadata)
+    filesMatching('fabric.mod.json') {
+        expand metadata
+        if (metadata.worldRenderMixin) {
+            filter { line -> line.replace('"mixins": []', '"mixins": ["trajectoryplus.client.mixins.json"]') }
+        }
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    options.release = 21
+    options.release = target.java
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.toVersion(target.java)
+    targetCompatibility = JavaVersion.toVersion(target.java)
     withSourcesJar()
 }
 
 jar {
-    from('LICENSE') { rename { "${it}_${project.archives_base_name}" } }
+    from('LICENSE') { rename { 'LICENSE_trajectoryplus' } }
 }
 
-// No auto-publishing tasks. The remapped JAR is made by the normal Loom build.
+sourceSets {
+    selfTest {
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.runtimeClasspath
+    }
+}
+
+def selfTests = [
+    physicsSelfTest: 'com.trajectoryplus.PhysicsMathSelfTest',
+    trajectorySelfTest: 'com.trajectoryplus.TrajectorySelfTest'
+]
+selfTests.each { taskName, checkClass ->
+    tasks.register(taskName, JavaExec) {
+        dependsOn sourceSets.selfTest.classesTaskName
+        classpath = sourceSets.selfTest.runtimeClasspath
+        mainClass = checkClass
+    }
+}
+tasks.named('check') { dependsOn selfTests.keySet() }
+
+def runtimeJar = tasks.named(remapped ? 'remapJar' : 'jar')
+def productionMods = configurations.create('productionClientMods') {
+    canBeConsumed = false
+    transitive = false
+}
+dependencies {
+    productionClientMods "net.fabricmc.fabric-api:fabric-api:${target.fabric_api}"
+    productionClientMods "com.terraformersmc:modmenu:${target.mod_menu}"
+}
+
+tasks.register('runProductionClient', ClientProductionRunTask) {
+    dependsOn runtimeJar
+    mods.from(runtimeJar, productionMods)
+    runDir = layout.buildDirectory.dir('client-smoke')
+    jvmArgs.add('-Xmx2G')
+}
