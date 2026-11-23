@@ -1,0 +1,93 @@
+{
+  "description": "Requested Minecraft versions for individually ported and CI-verified Trajectory+ Fabric JARs. This file is a planning manifest, NOT a compatibility declaration.",
+  "reference_issue": "https://github.com/Likeawinnaar/TrajectoryPlus/issues/1",
+  "mod_version": "1.1.0-beta",
+  "baseline": {
+    "minecraft": "1.21.1",
+    "status": "existing-ci-build-succeeded"
+  },
+  "versions": [
+    {
+      "minecraft": "1.21.2",
+      "status": "not-ported",
+      "runtime_jar_verified": false
+    },
+    {
+      "minecraft": "1.21.3",
+      "status": "not-ported",
+      "runtime_jar_verified": false
+    },
+    {
+      "minecraft": "1.21.4",
+      "status": "not-ported",
+      "runtime_jar_verified": false
+    },
+    {
+      "minecraft": "1.21.5",
+      "status": "not-ported",
+      "runtime_jar_verified": false
+    },
+    {
+      "minecraft": "1.21.6",
+      "status": "not-ported",
+      "runtime_jar_verified": false
+    },
+    {
+      "minecraft": "1.21.7",
+      "status": "not-ported",
+      "runtime_jar_verified": false
+    },
+    {
+      "minecraft": "1.21.8",
+      "status": "not-ported",
+      "runtime_jar_verified": false
+    },
+    {
+      "minecraft": "1.21.9",
+      "status": "not-ported",
+      "runtime_jar_verified": false
+    },
+    {
+      "minecraft": "1.21.10",
+      "status": "not-ported",
+      "runtime_jar_verified": false
+    },
+    {
+      "minecraft": "1.21.11",
+      "status": "not-ported",
+      "runtime_jar_verified": false
+    },
+    {
+      "minecraft": "26.1",
+      "status": "not-ported",
+      "runtime_jar_verified": false
+    },
+    {
+      "minecraft": "26.1.1",
+      "status": "not-ported",
+      "runtime_jar_verified": false
+    },
+    {
+      "minecraft": "26.1.2",
+      "status": "not-ported",
+      "runtime_jar_verified": false
+    },
+    {
+      "minecraft": "26.2",
+      "status": "not-ported",
+      "runtime_jar_verified": false
+    },
+    {
+      "minecraft": "26.3",
+      "status": "not-ported",
+      "runtime_jar_verified": false
+    }
+  ],
+  "constraints": [
+    "All separate JARs must compile using their target Minecraft/Fabric dependencies.",
+    "Do not advertise support from this manifest alone.",
+    "Verify and pin real artifact versions before building.",
+    "Use Java 25 and appropriate Loom/mappings for Minecraft 26.1+.",
+    "Preserve client-only architecture, ender pearl predictions, bow impact-only marker, Mod Menu and mod icon."
+  ]
+}
