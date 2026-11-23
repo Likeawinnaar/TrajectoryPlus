@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 
 /** Staged settings: Done commits, Cancel/Escape discards, Reset reverts staged values. */
-public final class TrajectorySettingsScreen extends Screen {
+public final class TrajectorySettingsScreen extends SettingsScreenBase {
     private final Screen parent;
     private TrajectoryConfig draft;
     private int page;
@@ -214,7 +214,6 @@ public final class TrajectorySettingsScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        renderBackground(context, mouseX, mouseY, delta);
         super.render(context, mouseX, mouseY, delta);
         context.drawCenteredTextWithShadow(textRenderer, title, width / 2, 8, 0xFFFFFFFF);
         context.drawCenteredTextWithShadow(textRenderer,

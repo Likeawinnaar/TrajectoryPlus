@@ -214,7 +214,6 @@ public final class TrajectorySettingsScreen extends Screen {
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta) {
-        extractBackground(context, mouseX, mouseY, delta);
         super.extractRenderState(context, mouseX, mouseY, delta);
         context.centeredText(font, title, width / 2, 8, 0xFFFFFFFF);
         context.centeredText(font,

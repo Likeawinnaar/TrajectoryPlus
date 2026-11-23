@@ -21,6 +21,9 @@ def smoke(minecraft):
         "runProductionClient",
     ]
     env = dict(os.environ, ALSOFT_DRIVERS="null", LIBGL_ALWAYS_SOFTWARE="1")
+    if minecraft == "26.3":
+        # SDL's GLX path cannot select a visual on the hosted runner's Xvfb.
+        env["SDL_VIDEO_X11_FORCE_EGL"] = "1"
     with log.open("w") as output:
         process = subprocess.Popen(command, start_new_session=True, stdout=output,
                                    stderr=subprocess.STDOUT, env=env)
@@ -29,6 +32,9 @@ def smoke(minecraft):
             ready_at = None
             while time.monotonic() < deadline:
                 contents = log.read_text(errors="replace")
+                if ("Failed to create backend OpenGL" in contents
+                        and "Failed to create backend Vulkan" in contents):
+                    raise RuntimeError("Minecraft could not initialize a graphics backend under Xvfb")
                 if process.poll() is not None or CRASH.search(contents):
                     raise RuntimeError("Minecraft exited during startup")
                 if config.is_file() and ASSET_ATLAS.search(contents):

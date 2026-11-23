@@ -40,6 +40,7 @@ dependencies {
 def numericVersion = target.minecraft.tokenize('.').last().toInteger()
 sourceSets.main.java.srcDir(remapped ? 'src/yarn/java' : 'src/mojang/java')
 if (remapped) {
+    sourceSets.main.java.srcDir(numericVersion <= 5 ? 'src/yarnGuiLegacy/java' : 'src/yarnGui/java')
     sourceSets.main.java.srcDir(numericVersion <= 8 ? 'src/yarnLegacy/java' :
         "src/yarn12${numericVersion}/java")
     if (numericVersion == 9) {
@@ -78,18 +79,24 @@ jar {
     from('LICENSE') { rename { 'LICENSE_trajectoryplus' } }
 }
 
+sourceSets {
+    selfTest {
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.runtimeClasspath
+    }
+}
+
 def selfTests = [
     physicsSelfTest: 'com.trajectoryplus.PhysicsMathSelfTest',
     trajectorySelfTest: 'com.trajectoryplus.TrajectorySelfTest'
 ]
 selfTests.each { taskName, checkClass ->
     tasks.register(taskName, JavaExec) {
-        dependsOn testClasses
-        classpath = sourceSets.test.runtimeClasspath
+        dependsOn sourceSets.selfTest.classesTaskName
+        classpath = sourceSets.selfTest.runtimeClasspath
         mainClass = checkClass
     }
 }
-tasks.named('test') { exclude '**/*SelfTest.class' }
 tasks.named('check') { dependsOn selfTests.keySet() }
 
 def runtimeJar = tasks.named(remapped ? 'remapJar' : 'jar')
