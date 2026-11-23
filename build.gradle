@@ -53,9 +53,14 @@ processResources {
     def metadata = [version: project.version, minecraft: target.minecraft, java: target.java,
                     loader: target.minecraft == '1.21.1' ? '0.16.0' : target.loader,
                     modmenu: target.minecraft == '1.21.1' ? '11.0.0' : target.mod_menu,
-                    mixins: target.minecraft == '1.21.9' ? '["trajectoryplus.client.mixins.json"]' : '[]']
+                    worldRenderMixin: target.minecraft == '1.21.9']
     inputs.properties(metadata)
-    filesMatching('fabric.mod.json') { expand metadata }
+    filesMatching('fabric.mod.json') {
+        expand metadata
+        if (metadata.worldRenderMixin) {
+            filter { line -> line.replace('"mixins": []', '"mixins": ["trajectoryplus.client.mixins.json"]') }
+        }
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -73,13 +78,19 @@ jar {
     from('LICENSE') { rename { 'LICENSE_trajectoryplus' } }
 }
 
-tasks.register('physicsSelfTest', JavaExec) {
-    dependsOn testClasses
-    classpath = sourceSets.test.runtimeClasspath
-    mainClass = 'com.trajectoryplus.PhysicsMathSelfTest'
+def selfTests = [
+    physicsSelfTest: 'com.trajectoryplus.PhysicsMathSelfTest',
+    trajectorySelfTest: 'com.trajectoryplus.TrajectorySelfTest'
+]
+selfTests.each { taskName, checkClass ->
+    tasks.register(taskName, JavaExec) {
+        dependsOn testClasses
+        classpath = sourceSets.test.runtimeClasspath
+        mainClass = checkClass
+    }
 }
-tasks.named('test') { exclude '**/PhysicsMathSelfTest.class' }
-tasks.named('check') { dependsOn 'physicsSelfTest' }
+tasks.named('test') { exclude '**/*SelfTest.class' }
+tasks.named('check') { dependsOn selfTests.keySet() }
 
 def runtimeJar = tasks.named(remapped ? 'remapJar' : 'jar')
 def productionMods = configurations.create('productionClientMods') {

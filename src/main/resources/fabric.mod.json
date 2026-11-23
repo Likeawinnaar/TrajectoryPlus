@@ -21,6 +21,6 @@
     "fabric-api": "*",
     "modmenu": ">=${modmenu}"
   },
-  "mixins": ${mixins},
+  "mixins": [],
   "icon": "assets/trajectoryplus/icon.png"
 }

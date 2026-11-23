@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added per-version Fabric builds with exact Minecraft metadata, using Yarn on 1.21.x and official Minecraft names on 26.x.
+- Added individual runtime JAR verification and client startup checks in GitHub Actions.
+- Shared trajectory prediction and impact geometry across ports and capped collision checks at the configured prediction distance.
+
 - Added the user-provided bow-and-crosshair artwork as Trajectory+'s in-game mod icon (128×128 transparent PNG).
 - Bow prediction is **impact-marker only**: the predicted location remains visible, but the trajectory line no longer obstructs aiming.
 - Added a ready-to-edit Modrinth project description.
