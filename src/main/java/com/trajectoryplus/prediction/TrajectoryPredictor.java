@@ -1,75 +1,80 @@
 package com.trajectoryplus.prediction;
 
 import com.trajectoryplus.config.TrajectoryConfig;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Never spawns an entity or loads chunks. One simulation iteration is one game tick. */
+/** Simulates one movement segment per tick, using the client's collision and fluid queries. */
 public final class TrajectoryPredictor {
+    public interface World {
+        boolean loaded(Point point);
+        Point impact(Point from, Point to);
+        boolean water(Point point);
+    }
+
+    public record Launch(ProjectileProfile profile, Point position, Point velocity) {}
+
     public enum StopReason { IMPACT, TIME_LIMIT, DISTANCE_LIMIT, UNLOADED_CHUNK, NONE }
-    public record Result(List<Vec3d> path, Vec3d impact, StopReason reason, ProjectileProfile.Kind kind) {
-        public boolean hasImpact() { return reason == StopReason.IMPACT && impact != null; }
-    }
+
+    public record Result(List<Point> path, Point impact, StopReason reason, ProjectileProfile.Kind kind) {}
+
     private static final Result EMPTY = new Result(List.of(), null, StopReason.NONE, null);
-    private final CollisionResolver collision = new CollisionResolver();
-    private final ProjectileResolver resolver = new ProjectileResolver();
-    private Result cached = EMPTY;
-    private long lastNanos;
+    private Result current = EMPTY;
 
-    public Result current() { return cached; }
-    public long lastMicros() { return lastNanos / 1000; }
-    public void clear() { cached = EMPTY; }
-
-    public void tick(ClientWorld world, ClientPlayerEntity player, TrajectoryConfig settings) {
-        if (world == null || player == null || !settings.enabled ||
-                (!settings.showTrajectory && !settings.showImpactMarker)) { clear(); return; }
-        ProjectileResolver.Launch launch = resolver.resolve(player, settings);
-        if (launch == null) { clear(); return; }
-        long startNanos = System.nanoTime();
-        cached = simulate(world, player, launch, settings);
-        lastNanos = System.nanoTime() - startNanos;
+    public Result current() {
+        return current;
     }
 
-    private Result simulate(ClientWorld world, ClientPlayerEntity player,
-                            ProjectileResolver.Launch launch, TrajectoryConfig settings) {
-        Vec3d pos = launch.position();
-        Vec3d velocity = launch.velocity();
-        List<Vec3d> points = new ArrayList<>(Math.min(settings.maxTicks, 256));
+    public void tick(World world, Launch launch, TrajectoryConfig settings) {
+        current = launch == null || !settings.shouldPredict() ? EMPTY : simulate(world, launch, settings);
+    }
+
+    public static Launch launch(ProjectileProfile.Kind kind, double pull, float pitch, float yaw,
+                                Point eye, Point movement, boolean onGround) {
+        ProjectileProfile profile = ProjectileProfile.forKind(kind, pull);
+        double p = Math.toRadians(pitch + profile.pitchOffset());
+        double y = Math.toRadians(yaw);
+        Point direction = new Point(-Math.sin(y) * Math.cos(p), -Math.sin(p), Math.cos(y) * Math.cos(p));
+        Point velocity = direction.multiply(profile.speed())
+                .add(movement.x(), onGround ? 0 : movement.y(), movement.z());
+        Point origin = eye.add(0, -.1, 0);
+        if (!profile.arrowLike()) origin = origin.add(direction.multiply(.16));
+        return new Launch(profile, origin, velocity);
+    }
+
+    private Result simulate(World world, Launch launch, TrajectoryConfig settings) {
+        Point pos = launch.position();
+        Point velocity = launch.velocity();
+        ProjectileProfile profile = launch.profile();
+        List<Point> points = new ArrayList<>(Math.min(settings.maxTicks + 1, 256));
         points.add(pos);
         double traversed = 0;
         for (int tick = 0; tick < settings.maxTicks; tick++) {
-            if (!Double.isFinite(pos.x + pos.y + pos.z + velocity.x + velocity.y + velocity.z)) break;
-            Vec3d next = pos.add(velocity);
-            BlockPos nextBlock = BlockPos.ofFloored(next);
-            if (!world.isChunkLoaded(nextBlock.getX() >> 4, nextBlock.getZ() >> 4))
-                return new Result(List.copyOf(points), null, StopReason.UNLOADED_CHUNK, launch.profile().kind());
-            Vec3d hit = collision.impact(world, player, pos, next);
+            double length = velocity.length();
+            if (!Double.isFinite(length)) break;
+            double remaining = settings.maxDistance - traversed;
+            boolean atLimit = length >= remaining;
+            Point next = pos.add(atLimit ? velocity.multiply(PhysicsMath.remainingFraction(remaining, length)) : velocity);
+            if (!world.loaded(next)) {
+                return new Result(List.copyOf(points), null, StopReason.UNLOADED_CHUNK, profile.kind());
+            }
+            Point hit = world.impact(pos, next);
             if (hit != null) {
                 points.add(hit);
-                return new Result(List.copyOf(points), hit, StopReason.IMPACT, launch.profile().kind());
-            }
-            double length = next.distanceTo(pos);
-            if (traversed + length >= settings.maxDistance) {
-                Vec3d end = pos.add(velocity.multiply(PhysicsMath.remainingFraction(settings.maxDistance - traversed, length)));
-                points.add(end);
-                return new Result(List.copyOf(points), null, StopReason.DISTANCE_LIMIT, launch.profile().kind());
+                return new Result(List.copyOf(points), hit, StopReason.IMPACT, profile.kind());
             }
             points.add(next);
+            if (atLimit) {
+                return new Result(List.copyOf(points), null, StopReason.DISTANCE_LIMIT, profile.kind());
+            }
             traversed += length;
             pos = next;
-            boolean inWater = world.getFluidState(BlockPos.ofFloored(pos)).isIn(FluidTags.WATER);
-            double drag = inWater ? launch.profile().waterDrag() : launch.profile().airDrag();
-            // Minecraft projectiles generally move, then apply drag, then gravity.
-            velocity = new Vec3d(
-                    PhysicsMath.dragComponent(velocity.x, drag),
-                    PhysicsMath.verticalVelocity(velocity.y, drag, launch.profile().gravity()),
-                    PhysicsMath.dragComponent(velocity.z, drag));
+            double drag = world.water(pos) ? profile.waterDrag() : profile.airDrag();
+            velocity = new Point(
+                    PhysicsMath.dragComponent(velocity.x(), drag),
+                    PhysicsMath.verticalVelocity(velocity.y(), drag, profile.gravity()),
+                    PhysicsMath.dragComponent(velocity.z(), drag));
         }
-        return new Result(List.copyOf(points), null, StopReason.TIME_LIMIT, launch.profile().kind());
+        return new Result(List.copyOf(points), null, StopReason.TIME_LIMIT, profile.kind());
     }
 }

@@ -11,6 +11,7 @@
   "trajectoryplus.keybinds": "Change Toggle Key",
   "trajectoryplus.error.hex": "Enter a valid #RRGGBB color",
   "category.trajectoryplus": "Trajectory+",
+  "key.category.trajectoryplus.controls": "Trajectory+",
   "key.trajectoryplus.toggle": "Toggle Trajectory+",
   "trajectoryplus.setting.enabled": "Enable Trajectory+",
   "trajectoryplus.setting.showTrajectory": "Show Trajectory",

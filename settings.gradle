@@ -1,8 +1,11 @@
-pluginManagement {
-    repositories {
-        maven { url = 'https://maven.fabricmc.net/' }
-        gradlePluginPortal()
-        mavenCentral()
-    }
+import groovy.json.JsonSlurper
+
+def manifest = new JsonSlurper().parse(file('porting/targets.json'))
+def minecraft = providers.gradleProperty('minecraft_version').getOrElse(manifest.baseline.minecraft)
+def target = ([manifest.baseline] + manifest.versions).find { it.minecraft == minecraft }
+if (target == null) {
+    throw new GradleException("Unknown Minecraft target: ${minecraft}")
 }
+gradle.ext.target = target
+gradle.ext.targetModVersion = target == manifest.baseline ? '1.0.0' : manifest.mod_version + '+mc' + minecraft
 rootProject.name = 'TrajectoryPlus'

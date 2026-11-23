@@ -71,6 +71,10 @@ public final class TrajectoryConfig {
         }
     }
 
+    public boolean shouldPredict() {
+        return enabled && (showTrajectory || showImpactMarker);
+    }
+
     public boolean allows(ProjectileProfile.Kind type) { return projectiles.getOrDefault(type, true); }
 
     public static String sanitizeColor(String color) {

@@ -9,12 +9,10 @@ import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.Vec3d;
+import com.trajectoryplus.prediction.TrajectoryPredictor.Launch;
 
 /** Recognizes only projectiles actually available to the local player. */
 public final class ProjectileResolver {
-    public record Launch(ProjectileProfile profile, Vec3d position, Vec3d velocity) {}
-
     public Launch resolve(ClientPlayerEntity player, TrajectoryConfig settings) {
         for (Hand hand : Hand.values()) {
             ItemStack stack = player.getStackInHand(hand);
@@ -36,14 +34,8 @@ public final class ProjectileResolver {
                 // Firework rockets and multi-projectile spread require separate prediction support.
                 if (loaded.contains(Items.FIREWORK_ROCKET)) continue;
             }
-            ProjectileProfile profile = ProjectileProfile.forKind(kind, pull);
-            Vec3d direction = direction(player.getPitch() + (float) profile.pitchOffset(), player.getYaw());
-            Vec3d velocity = direction.multiply(profile.speed());
-            Vec3d movement = player.getVelocity();
-            velocity = velocity.add(movement.x, player.isOnGround() ? 0 : movement.y, movement.z);
-            Vec3d origin = player.getEyePos().add(0, -.1, 0).add(direction.multiply(.16));
-            if (profile.arrowLike()) origin = player.getEyePos().add(0, -.1, 0);
-            return new Launch(profile, origin, velocity);
+            return TrajectoryPredictor.launch(kind, pull, player.getPitch(), player.getYaw(),
+                    YarnWorld.point(player.getEyePos()), YarnWorld.point(player.getVelocity()), player.isOnGround());
         }
         return null;
     }
@@ -61,9 +53,4 @@ public final class ProjectileResolver {
         return null;
     }
 
-    private static Vec3d direction(float pitch, float yaw) {
-        double p = Math.toRadians(pitch);
-        double y = Math.toRadians(yaw);
-        return new Vec3d(-Math.sin(y) * Math.cos(p), -Math.sin(p), Math.cos(y) * Math.cos(p));
-    }
 }
