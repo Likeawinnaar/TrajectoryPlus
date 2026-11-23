@@ -23,7 +23,7 @@ def smoke(minecraft):
     env = dict(os.environ, ALSOFT_DRIVERS="null", LIBGL_ALWAYS_SOFTWARE="1")
     if minecraft == "26.3":
         # SDL's GLX path cannot select a visual on the hosted runner's Xvfb.
-        env["SDL_VIDEO_X11_FORCE_EGL"] = "1"
+        env["SDL_VIDEO_FORCE_EGL"] = "1"
     with log.open("w") as output:
         process = subprocess.Popen(command, start_new_session=True, stdout=output,
                                    stderr=subprocess.STDOUT, env=env)
