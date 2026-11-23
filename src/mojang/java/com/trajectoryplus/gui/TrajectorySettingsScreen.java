@@ -115,7 +115,7 @@ public final class TrajectorySettingsScreen extends Screen {
         slider(x + w + 8, y, w, "maxTicks", 20, 400, draft.maxTicks,
                 v -> draft.maxTicks = (int) Math.round(v), false);
         addRenderableWidget(Button.builder(Component.translatable("trajectoryplus.keybinds"), b ->
-                minecraft.setScreen(new KeyBindsScreen(this, minecraft.options)))
+                ScreenPlatform.open(minecraft, new KeyBindsScreen(this, minecraft.options)))
                 .bounds(x, y + 42, w, 20).build());
     }
 
@@ -200,17 +200,17 @@ public final class TrajectorySettingsScreen extends Screen {
 
     private void switchPage(int amount) { openPage(Math.floorMod(page + amount, 4)); }
     private void openPage(int index) {
-        minecraft.setScreen(new TrajectorySettingsScreen(parent, draft, index));
+        ScreenPlatform.open(minecraft, new TrajectorySettingsScreen(parent, draft, index));
     }
 
     private void done() {
         if (badLineColor || badMarkerColor) return;
         TrajectoryPlusClient.CONFIG.update(draft);
-        minecraft.setScreen(parent);
+        ScreenPlatform.open(minecraft, parent);
     }
 
     @Override
-    public void onClose() { minecraft.setScreen(parent); }
+    public void onClose() { ScreenPlatform.open(minecraft, parent); }
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta) {

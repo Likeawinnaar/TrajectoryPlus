@@ -16,5 +16,12 @@ exit /b %errorlevel%
 
 :target
 set "ARG=%~1"
-if "%ARG:~0,20%"=="-Pminecraft_version=" set "MINECRAFT=%ARG:~20%"
+if defined NEXT_IS_MINECRAFT (
+  set "MINECRAFT=%ARG%"
+  set "NEXT_IS_MINECRAFT="
+) else if "%ARG%"=="-Pminecraft_version" (
+  set "NEXT_IS_MINECRAFT=1"
+) else if "%ARG:~0,20%"=="-Pminecraft_version=" (
+  set "MINECRAFT=%ARG:~20%"
+)
 exit /b 0

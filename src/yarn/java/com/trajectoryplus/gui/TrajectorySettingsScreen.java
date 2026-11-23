@@ -216,21 +216,21 @@ public final class TrajectorySettingsScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         renderBackground(context, mouseX, mouseY, delta);
         super.render(context, mouseX, mouseY, delta);
-        context.drawCenteredTextWithShadow(textRenderer, title, width / 2, 8, 0xFFFFFF);
+        context.drawCenteredTextWithShadow(textRenderer, title, width / 2, 8, 0xFFFFFFFF);
         context.drawCenteredTextWithShadow(textRenderer,
-                Text.translatable("trajectoryplus.page." + page), width / 2, 28, 0xBBBBBB);
+                Text.translatable("trajectoryplus.page." + page), width / 2, 28, 0xFFBBBBBB);
         if (page == 2) {
             int full = Math.min(460, width - 24);
             int x = width / 2 - full / 2;
             int y = Math.max(44, height / 2 - 102) + 88;
             context.drawTextWithShadow(textRenderer, Text.translatable("trajectoryplus.setting.lineColor"),
-                    x, y, 0xFFFFFF);
+                    x, y, 0xFFFFFFFF);
             context.drawTextWithShadow(textRenderer, Text.translatable("trajectoryplus.setting.impactMarkerColor"),
-                    x + (full + 8) / 2, y, 0xFFFFFF);
+                    x + (full + 8) / 2, y, 0xFFFFFFFF);
         }
         if (badLineColor || badMarkerColor) {
             context.drawCenteredTextWithShadow(textRenderer, Text.translatable("trajectoryplus.error.hex"),
-                    width / 2, height - 40, 0xFF6666);
+                    width / 2, height - 40, 0xFFFF6666);
         }
     }
 }

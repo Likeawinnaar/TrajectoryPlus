@@ -42,6 +42,14 @@ jobs:
         run: gradle clean build -Pminecraft_version="$MC_VERSION" --stacktrace
       - name: Check runtime JAR
         run: python3 porting/ci.py verify "$MC_VERSION" "build/libs/$JAR_NAME"
+      - name: Install virtual display if needed
+        run: |
+          if ! command -v xvfb-run >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y xvfb
+          fi
+      - name: Start Minecraft with the runtime JAR
+        run: python3 porting/smoke_client.py "$MC_VERSION"
       - name: Upload runtime JAR
         id: upload
         uses: actions/upload-artifact@v4
@@ -54,5 +62,5 @@ jobs:
         env:
           ARTIFACT_URL: ${{ steps.upload.outputs.artifact-url }}
         run: |
-          printf 'Minecraft %s passed compilation, physics tests, and JAR metadata checks.\n\n' "$MC_VERSION" >> "$GITHUB_STEP_SUMMARY"
+          printf 'Minecraft %s passed compilation, physics tests, JAR metadata checks, and client startup.\n\n' "$MC_VERSION" >> "$GITHUB_STEP_SUMMARY"
           printf '[Download %s](%s)\n' "$JAR_NAME" "$ARTIFACT_URL" >> "$GITHUB_STEP_SUMMARY"

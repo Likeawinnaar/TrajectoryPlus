@@ -1,3 +1,5 @@
+import net.fabricmc.loom.task.prod.ClientProductionRunTask
+
 buildscript {
     repositories {
         maven {
@@ -78,3 +80,20 @@ tasks.register('physicsSelfTest', JavaExec) {
 }
 tasks.named('test') { exclude '**/PhysicsMathSelfTest.class' }
 tasks.named('check') { dependsOn 'physicsSelfTest' }
+
+def runtimeJar = tasks.named(remapped ? 'remapJar' : 'jar')
+def productionMods = configurations.create('productionClientMods') {
+    canBeConsumed = false
+    transitive = false
+}
+dependencies {
+    productionClientMods "net.fabricmc.fabric-api:fabric-api:${target.fabric_api}"
+    productionClientMods "com.terraformersmc:modmenu:${target.mod_menu}"
+}
+
+tasks.register('runProductionClient', ClientProductionRunTask) {
+    dependsOn runtimeJar
+    mods.from(runtimeJar, productionMods)
+    runDir = layout.buildDirectory.dir('client-smoke')
+    jvmArgs.add('-Xmx2G')
+}

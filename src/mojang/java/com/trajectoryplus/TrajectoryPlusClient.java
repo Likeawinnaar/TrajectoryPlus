@@ -10,7 +10,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
-import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.platform.InputConstants;
 
 public final class TrajectoryPlusClient implements ClientModInitializer {
     public static ConfigManager CONFIG;
@@ -23,7 +23,7 @@ public final class TrajectoryPlusClient implements ClientModInitializer {
         CONFIG = new ConfigManager();
         var category = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("trajectoryplus", "controls"));
         var toggle = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.trajectoryplus.toggle",
-                GLFW.GLFW_KEY_P, category));
+                InputConstants.KEY_P, category));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (toggle.consumeClick()) {
                 var config = CONFIG.get().copy();
